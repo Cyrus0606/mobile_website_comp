@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CPTTM 青年競賽數碼館 — 從競賽中學習，在實踐中成長。六項比賽、九屆歷程，找到最適合你的那一項。">
+  <meta name="theme-color" content="#0a2540">
+  <title>青年競賽數碼館｜從競賽中學習，在實踐中成長</title>
+  <script>
+    /* 提早設定主題，避免畫面閃爍；同時標記 JS 已啟用（給動畫用） */
+    (function () {
+      document.documentElement.classList.add("js");
+      try {
+        var t = localStorage.getItem("cpttm30_theme");
+        if (t !== "light" && t !== "dark") {
+          t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)
+            ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至主要內容</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="CPTTM 青年競賽數碼館首頁">
+        <img src="logos/原色LOGO.png" alt="CPTTM 標誌" class="logo-cpttm" decoding="async">
+        <img src="logos/cpttm-30th-c.png" alt="CPTTM 30周年標誌" class="logo-30th" decoding="async">
+        <span class="site-name">CPTTM<small>青年競賽數碼館</small></span>
+      </a>
+      <nav class="main-nav" aria-label="主要導覽">
+        <a href="index.html">首頁</a>
+        <a href="competitions.html" aria-current="page">青年競賽數碼館</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button"
+              aria-label="切換至深色模式" aria-pressed="false">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 2.5 V5 M12 19 V21.5 M2.5 12 H5 M19 12 H21.5
+                   M5.2 5.2 L6.9 6.9 M17.1 17.1 L18.8 18.8
+                   M18.8 5.2 L17.1 6.9 M6.9 17.1 L5.2 18.8"
+                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20 14.5 A8.5 8.5 0 1 1 9.5 4 A7 7 0 0 0 20 14.5 Z"
+                fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+
+       <!-- ===== 頁面標題 ===== -->
+       <section class="page-hero" aria-labelledby="page-title">
+        <!-- 裝飾背景圖（三張傾斜縮圖，低透明度） -->
+        <div class="page-hero-bg" aria-hidden="true">
+          <img src="images/competition-web.jpg"    alt="" class="phb-img phb-img--1">
+          <img src="images/competition-python.jpg" alt="" class="phb-img phb-img--2">
+          <img src="images/competition-quiz.jpg"   alt="" class="phb-img phb-img--3">
+        </div>
+        <div class="wrap">
+          <p class="page-eyebrow">
+            <a href="index.html" class="breadcrumb">首頁</a>
+            <span aria-hidden="true">／</span>
+            青年競賽數碼館
+          </p>
+          <h1 id="page-title" class="page-title">
+            <span>青年競賽數碼館</span>
+            <span>從競賽中學習，在實踐中成長</span>
+          </h1>
+          <p class="page-sub">選一個分類，找到最適合你的那一項比賽。</p>
+        </div>
+      </section>
+    <!-- ===== 篩選 ===== -->
+    <section class="section section--tight" aria-labelledby="filter-title">
+      <div class="wrap">
+        <h2 id="filter-title" class="sr-only">比賽分類</h2>
+
+        <div class="filter-bar" role="group" aria-label="比賽分類篩選">
+          <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button class="filter-btn" type="button" data-filter="web" aria-pressed="false">網站與編程</button>
+          <button class="filter-btn" type="button" data-filter="office" aria-pressed="false">數碼辦公</button>
+          <button class="filter-btn" type="button" data-filter="design" aria-pressed="false">創意設計</button>
+          <button class="filter-btn" type="button" data-filter="quiz" aria-pressed="false">知識挑戰</button>
+          <button class="filter-btn" type="button" data-filter="network" aria-pressed="false">網絡與安全</button>
+        </div>
+
+        <div class="filter-extra">
+          <button class="fav-filter-btn" id="favFilterBtn" type="button" aria-pressed="false">
+            <span aria-hidden="true">★</span>
+            <span>只看收藏</span>
+            <span class="fav-count" id="favCount">0</span>
+          </button>
+          <p class="filter-hint" id="filterHint" role="status" aria-live="polite"></p>
+        </div>
+
+        <!-- 技能標籤：第二層篩選（可折疊） -->
+        <details class="tag-filter" id="tagFilter">
+          <summary class="tag-filter-summary">
+            <span class="tag-filter-icon" aria-hidden="true">#</span>
+            <span>用技能標籤篩選</span>
+            <span class="tag-filter-chevron" aria-hidden="true">▾</span>
+          </summary>
+          <div class="tag-cloud" id="tagCloudList" role="group" aria-label="技能標籤篩選"></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===== 六項比賽 ===== -->
+    <section id="competitions" class="section" aria-labelledby="competitions-title">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="section-eyebrow">六項技能比賽 + 一項歷屆回顧</p>
+          <h2 id="competitions-title">七項比賽</h2>
+          <p class="section-sub">每項比賽都有「適合誰」引導語，按「了解更多」在同一頁看目的、對象、主要技能與比賽形式。</p>
+        </header>
+
+        <div class="competition-grid" id="competitionGrid">
+
+          <!-- A. 手機網站 -->
+          <article class="competition-card" data-category="web" data-id="A">
+            <div class="card-media">
+              <img src="images/competition-web.jpg" alt="手機網站技術技能比賽現場" width="800" height="500" loading="lazy">
+              <span class="card-badge">網站與編程</span>
+              <button class="fav-btn" type="button" data-fav="A" aria-pressed="false" aria-label="收藏「全澳中學生手機網站技術技能比賽」">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3 L14.9 9 L21.5 9.7 L16.7 14.2 L18 20.7 L12 17.6 L6 20.7 L7.3 14.2 L2.5 9.7 L9.1 9 Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="card-body">
+              <h3>全澳中學生手機網站技術技能比賽</h3>
+              <p class="card-intro">培養中學生在手機網站設計與開發方面的專業技能，透過團隊合作，把介面設計、程式開發及使用者體驗應用於實際項目。</p>
+              <p class="card-fit"><strong>適合誰：</strong>想挑戰手機網站開發、喜歡分工合作完成作品的人。</p>
+              <ul class="tag-row" aria-label="技能標籤">
+                <li>HTML</li><li>CSS</li><li>JavaScript</li><li>UI/UX</li>
+              </ul>
+              <button class="compare-btn" type="button" data-compare="A" aria-pressed="false">
+                <span aria-hidden="true">⇄</span>
+                <span class="compare-label">加入比較</span>
+              </button>
+              <button class="more-btn" type="button" aria-expanded="false" aria-controls="detail-A">
+                <span>了解更多</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2.4"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="details" id="detail-A" hidden>
+                <dl>
+                  <div><dt>比賽目的</dt><dd>培養中學生在手機網站設計與開發方面的專業技能。</dd></div>
+                  <div><dt>參賽對象</dt><dd>本澳中學生（二人一隊）。</dd></div>
+                  <div><dt>主要技能</dt><dd>HTML、CSS、JavaScript、介面與使用者體驗設計。</dd></div>
+                  <div><dt>比賽形式</dt><dd>以團隊形式於限時內完成指定主題的手機網站。</dd></div>
+                </dl>
+                <button class="close-btn" type="button">收起</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- B. Python -->
+          <article class="competition-card" data-category="web" data-id="B">
+            <div class="card-media">
+              <img src="images/competition-python.jpg" alt="Python 解難比賽現場" width="800" height="500" loading="lazy">
+              <span class="card-badge">網站與編程</span>
+              <button class="fav-btn" type="button" data-fav="B" aria-pressed="false" aria-label="收藏「全澳中學生Python解難比賽」">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3 L14.9 9 L21.5 9.7 L16.7 14.2 L18 20.7 L12 17.6 L6 20.7 L7.3 14.2 L2.5 9.7 L9.1 9 Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="card-body">
+              <h3>全澳中學生Python解難比賽</h3>
+              <p class="card-intro">透過程式設計任務，培養學生的邏輯思維、解難能力及創新思維，為未來學習和職業發展建立基礎。</p>
+              <p class="card-fit"><strong>適合誰：</strong>喜歡用 Python 解題、享受邏輯推理與演算法挑戰的人。</p>
+              <ul class="tag-row" aria-label="技能標籤">
+                <li>Python</li><li>演算法</li><li>邏輯思維</li><li>解難</li>
+              </ul>
+              <button class="compare-btn" type="button" data-compare="B" aria-pressed="false">
+                <span aria-hidden="true">⇄</span>
+                <span class="compare-label">加入比較</span>
+              </button>
+              <button class="more-btn" type="button" aria-expanded="false" aria-controls="detail-B">
+                <span>了解更多</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2.4"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="details" id="detail-B" hidden>
+                <dl>
+                  <div><dt>比賽目的</dt><dd>培養學生的邏輯思維、解難能力及創新思維。</dd></div>
+                  <div><dt>參賽對象</dt><dd>本澳中學生。</dd></div>
+                  <div><dt>主要技能</dt><dd>Python、演算法、邏輯思維。</dd></div>
+                  <div><dt>比賽形式</dt><dd>於限時內透過程式設計任務完成解難挑戰。</dd></div>
+                </dl>
+                <button class="close-btn" type="button">收起</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- C. Office -->
+          <article class="competition-card" data-category="office" data-id="C">
+            <div class="card-media">
+              <img src="images/competition-office.jpg" alt="Office 軟件技能比賽頒獎禮" width="800" height="500" loading="lazy">
+              <span class="card-badge">數碼辦公</span>
+              <button class="fav-btn" type="button" data-fav="C" aria-pressed="false" aria-label="收藏「澳門學生Office 軟件技能比賽」">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3 L14.9 9 L21.5 9.7 L16.7 14.2 L18 20.7 L12 17.6 L6 20.7 L7.3 14.2 L2.5 9.7 L9.1 9 Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="card-body">
+              <h3>澳門學生Office 軟件技能比賽</h3>
+              <p class="card-intro">讓學生運用 Word、Excel 或 PowerPoint 完成專業任務，提升文件處理、數據整理及簡報製作能力。</p>
+              <p class="card-fit"><strong>適合誰：</strong>想把文書、試算表與簡報技巧練到專業水平的人。</p>
+              <ul class="tag-row" aria-label="技能標籤">
+                <li>Word</li><li>Excel</li><li>PowerPoint</li><li>數碼辦公</li>
+              </ul>
+              <button class="compare-btn" type="button" data-compare="C" aria-pressed="false">
+                <span aria-hidden="true">⇄</span>
+                <span class="compare-label">加入比較</span>
+              </button>
+              <button class="more-btn" type="button" aria-expanded="false" aria-controls="detail-C">
+                <span>了解更多</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2.4"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="details" id="detail-C" hidden>
+                <dl>
+                  <div><dt>比賽目的</dt><dd>提升學生的文件處理、數據整理及簡報製作能力。</dd></div>
+                  <div><dt>參賽對象</dt><dd>本澳學生。</dd></div>
+                  <div><dt>主要技能</dt><dd>Word、Excel、PowerPoint。</dd></div>
+                  <div><dt>比賽形式</dt><dd>運用 Office 軟件完成指定專業任務。</dd></div>
+                </dl>
+                <button class="close-btn" type="button">收起</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- D. 多媒體設計 -->
+          <article class="competition-card" data-category="design" data-id="D">
+            <div class="card-media">
+              <img src="images/competition-design.jpg" alt="多媒體設計軟件技能比賽海報" width="800" height="500" loading="lazy">
+              <span class="card-badge">創意設計</span>
+              <button class="fav-btn" type="button" data-fav="D" aria-pressed="false" aria-label="收藏「澳門學生多媒體設計軟件技能比賽」">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3 L14.9 9 L21.5 9.7 L16.7 14.2 L18 20.7 L12 17.6 L6 20.7 L7.3 14.2 L2.5 9.7 L9.1 9 Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="card-body">
+              <h3>澳門學生多媒體設計軟件技能比賽</h3>
+              <p class="card-intro">考驗學生的視覺傳意、海報設計及 Adobe 軟件應用能力，鼓勵學生透過設計表達創意。</p>
+              <p class="card-fit"><strong>適合誰：</strong>喜歡視覺創作、海報設計與多媒體表達的人。</p>
+              <ul class="tag-row" aria-label="技能標籤">
+                <li>Photoshop</li><li>Illustrator</li><li>InDesign</li><li>視覺設計</li>
+              </ul>
+              <button class="compare-btn" type="button" data-compare="D" aria-pressed="false">
+                <span aria-hidden="true">⇄</span>
+                <span class="compare-label">加入比較</span>
+              </button>
+              <button class="more-btn" type="button" aria-expanded="false" aria-controls="detail-D">
+                <span>了解更多</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2.4"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="details" id="detail-D" hidden>
+                <dl>
+                  <div><dt>比賽目的</dt><dd>考驗學生的視覺傳意與海報設計能力，鼓勵以設計表達創意。</dd></div>
+                  <div><dt>參賽對象</dt><dd>本澳學生。</dd></div>
+                  <div><dt>主要技能</dt><dd>Photoshop、Illustrator、InDesign、視覺設計。</dd></div>
+                  <div><dt>比賽形式</dt><dd>運用設計軟件完成指定主題的視覺創作。</dd></div>
+                </dl>
+                <button class="close-btn" type="button">收起</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- E. 知識問答 -->
+          <article class="competition-card" data-category="quiz" data-id="E">
+            <div class="card-media">
+              <img src="images/competition-quiz.jpg" alt="資訊科技知識問答比賽合照" width="800" height="500" loading="lazy">
+              <span class="card-badge">知識挑戰</span>
+              <button class="fav-btn" type="button" data-fav="E" aria-pressed="false" aria-label="收藏「全澳中學生資訊科技知識問答比賽」">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3 L14.9 9 L21.5 9.7 L16.7 14.2 L18 20.7 L12 17.6 L6 20.7 L7.3 14.2 L2.5 9.7 L9.1 9 Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="card-body">
+              <h3>全澳中學生資訊科技知識問答比賽</h3>
+              <p class="card-intro">透過團隊問答形式，測試學生對資訊科技、網絡安全、電腦系統及新興科技的認識。</p>
+              <p class="card-fit"><strong>適合誰：</strong>喜歡科技冷知識、團隊搶答與邏輯思考的人。</p>
+              <ul class="tag-row" aria-label="技能標籤">
+                <li>資訊科技</li><li>網絡安全</li><li>團隊合作</li><li>知識問答</li>
+              </ul>
+              <button class="compare-btn" type="button" data-compare="E" aria-pressed="false">
+                <span aria-hidden="true">⇄</span>
+                <span class="compare-label">加入比較</span>
+              </button>
+              <button class="more-btn" type="button" aria-expanded="false" aria-controls="detail-E">
+                <span>了解更多</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2.4"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="details" id="detail-E" hidden>
+                <dl>
+                  <div><dt>比賽目的</dt><dd>測試學生對資訊科技、網絡安全、電腦系統及新興科技的認識。</dd></div>
+                  <div><dt>參賽對象</dt><dd>本澳中學生（團隊形式）。</dd></div>
+                  <div><dt>主要技能</dt><dd>資訊科技、網絡安全、團隊合作。</dd></div>
+                  <div><dt>比賽形式</dt><dd>團隊問答。</dd></div>
+                </dl>
+                <button class="close-btn" type="button">收起</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- F. 歷屆回顧（入口卡） -->
+          <article class="competition-card" data-category="web" data-id="F">
+            <div class="card-media">
+              <img src="images/competition-history.jpg" alt="手機網站比賽歷屆回顧" width="800" height="500" loading="lazy">
+              <span class="card-badge">網站與編程</span>
+              <button class="fav-btn" type="button" data-fav="F" aria-pressed="false" aria-label="收藏「全澳中學生手機網站技術技能比賽歷屆回顧」">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3 L14.9 9 L21.5 9.7 L16.7 14.2 L18 20.7 L12 17.6 L6 20.7 L7.3 14.2 L2.5 9.7 L9.1 9 Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="card-body">
+              <h3>全澳中學生手機網站技術技能比賽歷屆回顧</h3>
+              <p class="card-intro">回顧手機網站比賽由第一屆至第九屆的發展，展示歷年參賽者透過設計與程式開發提升專業技能的歷程。</p>
+              <p class="card-fit"><strong>適合誰：</strong>想了解比賽歷史、看看學長姐如何一步步成長的人。</p>
+              <ul class="tag-row" aria-label="技能標籤">
+                <li>第一屆至第九屆</li><li>手機優先</li><li>團隊競賽</li><li>技能傳承</li>
+              </ul>
+              <button class="compare-btn" type="button" data-compare="F" aria-pressed="false">
+                <span aria-hidden="true">⇄</span>
+                <span class="compare-label">加入比較</span>
+              </button>
+              <button class="more-btn" type="button" aria-expanded="false" aria-controls="detail-F">
+                <span>了解更多</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2.4"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="details" id="detail-F" hidden>
+                <dl>
+                  <div><dt>比賽目的</dt><dd>回顧手機網站比賽由第一屆至第九屆的發展，展示技能傳承。</dd></div>
+                  <div><dt>參賽對象</dt><dd>歷屆參賽者及公眾。</dd></div>
+                  <div><dt>主要技能</dt><dd>手機優先、團隊競賽、技能傳承。</dd></div>
+                  <div><dt>比賽形式</dt><dd>歷屆賽事回顧與成果展示。</dd></div>
+                </dl>
+                <p class="detail-actions">
+                  <button class="text-btn" type="button" data-open-history>
+                    查看第一屆至第九屆完整回顧 <span aria-hidden="true">→</span>
+                  </button>
+                </p>
+                <button class="close-btn" type="button">收起</button>
+              </div>
+            </div>
+          </article>
+        <!-- G. 港澳青少年網絡技能競賽 -->
+<article class="competition-card" data-category="network" data-id="G">
+  <div class="card-media">
+    <img src="images/cyber_competition.jpeg" alt="港澳青少年網絡技能競賽" width="800" height="500" loading="lazy">
+    <span class="card-badge">網絡與安全</span>
+    <button class="fav-btn" type="button" data-fav="G" aria-pressed="false" aria-label="收藏「港澳青少年網絡技能競賽」">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3 L14.9 9 L21.5 9.7 L16.7 14.2 L18 20.7 L12 17.6 L6 20.7 L7.3 14.2 L2.5 9.7 L9.1 9 Z"
+              fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+  <div class="card-body">
+    <h3>港澳青少年網絡技能競賽</h3>
+    <p class="card-intro">增加港澳青少年對網絡技術的興趣，透過網絡知識測試與競賽，培育網絡技術人才，並選拔學生參加國際性賽事。</p>
+    <p class="card-fit"><strong>適合誰：</strong>對網絡世界充滿好奇、喜歡拆解網絡運作原理、想代表澳門赴港參賽的人。</p>
+    <ul class="tag-row" aria-label="技能標籤">
+      <li>網絡技術</li><li>網絡安全</li><li>資訊科技</li>
+    </ul>
+    <button class="compare-btn" type="button" data-compare="G" aria-pressed="false">
+      <span aria-hidden="true">⇄</span>
+      <span class="compare-label">加入比較</span>
+    </button>
+    <button class="more-btn" type="button" aria-expanded="false" aria-controls="detail-G">
+      <span>了解更多</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2.4"
+              fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="details" id="detail-G" hidden>
+      <dl>
+        <div><dt>比賽目的</dt><dd>增加港澳兩地青少年對網絡技術的興趣，培育本澳網絡技術專才。</dd></div>
+        <div><dt>參賽對象</dt><dd>本澳中學生。</dd></div>
+        <div><dt>主要技能</dt><dd>網絡技術、網絡安全、資訊科技。</dd></div>
+        <div><dt>比賽形式</dt><dd>初賽為線上網絡知識測試，成績最好的20名進入決賽，赴港參賽。</dd></div>
+      </dl>
+      <button class="close-btn" type="button">收起</button>
+    </div>
+  </div>
+</article>
+
+        </div>
+
+        <p class="empty-state" id="emptyState" hidden>目前沒有符合條件的比賽，請試試其他分類。</p>
+      </div>
+    </section>
+
+    <!-- ===== 歷屆回顧（獨立區域，預設隱藏） ===== -->
+    <section id="historyWrapper" class="section section--tinted history-wrapper" hidden aria-labelledby="history-title">
+      <div class="wrap">
+
+        <header class="section-head history-head">
+          <p class="section-eyebrow">歷屆手機網站比賽</p>
+          <h2 id="history-title">一項比賽，九屆成長</h2>
+          <p class="section-sub">從第一屆的起點，到第九屆的本屆——比賽陪伴本澳中學生一步步走過。</p>
+          <button type="button" class="close-btn history-close" id="historyCloseBtn">
+            <span aria-hidden="true">✕</span> 收起歷屆回顧
+          </button>
+        </header>
+
+        <!-- 屆次按鈕列（只在這裡出現） -->
+        <div class="editions" aria-label="比賽屆次">
+          <span class="editions-label">屆次</span>
+          <ol class="edition-list" role="list">
+            <li><button class="edition-btn" type="button" data-edition="1">第一屆</button></li>
+            <li><button class="edition-btn" type="button" data-edition="2">第二屆</button></li>
+            <li><button class="edition-btn" type="button" data-edition="3">第三屆</button></li>
+            <li><button class="edition-btn" type="button" data-edition="4">第四屆</button></li>
+            <li><button class="edition-btn" type="button" data-edition="5">第五屆</button></li>
+            <li><button class="edition-btn" type="button" data-edition="6">第六屆</button></li>
+            <li><button class="edition-btn" type="button" data-edition="7">第七屆</button></li>
+            <li><button class="edition-btn" type="button" data-edition="8">第八屆</button></li>
+            <li class="current">
+              <button class="edition-btn" type="button" data-edition="9" aria-current="true">
+                第九屆<em class="badge-now">本屆</em>
+              </button>
+            </li>
+          </ol>
+        </div>
+
+        <!-- 每年獨立 section -->
+        <div class="history-sections">
+
+          <article class="history-section" id="history-1" data-edition="1">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2018</span>
+              <h3>第一屆：起點</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>主辦</dt><dd>澳門生產力暨科技轉移中心</dd></div>
+              <div><dt>協辦 / 贊助</dt><dd>澳門科學技術發展基金協辦；教育暨青年局贊助</dd></div>
+              <div><dt>比賽形式</dt><dd>個人制，先經培訓班篩選</dd></div>
+              <div><dt>決賽地點</dt><dd>科技周期間進行</dd></div>
+            </dl>
+            <p class="history-desc">第一屆全澳中學生手機網站設計技能比賽正式創辦，為本澳中學生提供手機網站技術競技平台。比賽以個人方式參賽，先經培訓班篩選，決賽於科技周期間進行。</p>
+            <div class="history-awards">
+              <h4>獲獎名單</h4>
+              <ul>
+                <li><strong>中學組冠軍</strong>李佳駿</li>
+              </ul>
+              <p class="history-prize">獎金：第一名 6,000 元、第二名 3,000 元、第三名 1,500 元，各獲獎盃乙座。</p>
+            </div>
+          </article>
+
+          <article class="history-section" id="history-2" data-edition="2">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2019</span>
+              <h3>第二屆：延續</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>決賽時間</dt><dd>2019年10月10日</dd></div>
+              <div><dt>決賽地點</dt><dd>澳門威尼斯人展覽館—科學技術發展基金 2019 科技周 </dd></div>
+              <div><dt>比賽形式</dt><dd>個人制</dd></div>
+              <div><dt>技術特點</dt><dd>強調手機感應器互動：位置、方向、體感、相機、藍牙</dd></div>
+            </dl>
+            <p class="history-desc">第二屆比賽決賽於澳門威尼斯人展覽館中完成。手機網站技術和傳統網站的最大分別在於手機更個人化，及有更多感應器以加強互動，例如位置、方向、體感、相機、甚至藍牙技術等都可以在手機上實現。</p>
+            <div class="history-awards">
+              <h4>獲獎名單</h4>
+              <ul>
+                <li><strong>第一名</strong>李佳駿</li>
+                <li><strong>第二名</strong>鐘梓瓏</li>
+                <li><strong>第三名</strong>蔡尚均</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="history-section" id="history-3" data-edition="3">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2020</span>
+              <h3>第三屆：成長</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>報名期間</dt><dd>2020年7月6日 至 7月31日</dd></div>
+              <div><dt>組別</dt><dd>中學組、大專組</dd></div>
+              <div><dt>參賽人數</dt><dd>72 名學生</dd></div>
+              <div><dt>賽制</dt><dd>先網絡培訓強化課程，再選拔賽，每組選出八人進入決賽</dd></div>
+              <div><dt>特別安排</dt><dd>首次開放予市民觀賽</dd></div>
+            </dl>
+            <p class="history-desc">第三屆賽事設有大專組及中學生兩個組別，共有 72 名學生參加，比賽期間首次開放予市民觀賽。賽前提供網絡培訓強化課程，並舉行選拔賽，每組選出八人參加決賽。</p>
+            <div class="history-awards">
+              <h4>獲獎名單（中學組）</h4>
+              <ul>
+                <li><strong>冠軍</strong>張鎮揚（澳門勞校中學）</li>
+                <li><strong>亞軍</strong>黃浩源（澳門勞校中學）</li>
+                <li><strong>季軍</strong>顏俊偉（培正中學）</li>
+              </ul>
+              <p class="history-prize">獎金：冠軍 6,000 元、亞軍 3,000 元、季軍 1,000 元，各獲獎盃乙座。</p>
+            </div>
+          </article>
+
+          <article class="history-section" id="history-4" data-edition="4">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2021</span>
+              <h3>第四屆：拓展</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>初賽日期</dt><dd>2021年9月15日</dd></div>
+              <div><dt>組別</dt><dd>中學組、大專組</dd></div>
+              <div><dt>決賽名額</dt><dd>中學組前 10 名、大專組前 5 名</dd></div>
+              <div><dt>培訓</dt><dd>入圍選手於 9/25、9/26、10/9、10/10 接受共 24 小時培訓</dd></div>
+            </dl>
+            <p class="history-desc">第四屆全澳學生手機網站技術技能比賽初賽於 2021 年 9 月 15 日完成，賽事分為中學組及大專組。中學組排名前 10 位、大專組排名前 5 位參賽者進入決賽，入圍選手於 9 月 25、26 日、10 月 9、10 日接受共 24 小時的培訓。</p>
+            <div class="history-awards">
+              <h4>獲獎名單（中學組）</h4>
+              <ul>
+                <li><strong>冠軍</strong>張鎮揚（澳門勞校中學）</li>
+                <li><strong>亞軍</strong>顏俊偉（培正中學）</li>
+                <li><strong>季軍</strong>黃浩源（澳門勞校中學）</li>
+              </ul>
+              <p class="history-prize">獎金：冠軍 4,000 元、亞軍 3,000 元、季軍 2,000 元，各獲獎盃乙座。</p>
+            </div>
+          </article>
+
+          <article class="history-section" id="history-5" data-edition="5">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2022</span>
+              <h3>第五屆：規模</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>參賽規模</dt><dd>19 所學校、60 名學生</dd></div>
+              <div><dt>初賽日期</dt><dd>2022年11月9日</dd></div>
+              <div><dt>決賽日期</dt><dd>2022年11月26日</dd></div>
+              <div><dt>決賽地點</dt><dd>本中心數碼匯點</dd></div>
+              <div><dt>決賽主題</dt><dd>澳門旅遊文化：旅遊登記表、旅客資訊記錄、行程卡</dd></div>
+            </dl>
+            <p class="history-desc">第五屆賽事報名踴躍，吸引 19 所學校、共 60 名學生參賽。初賽已於 2022 年 11 月 9 日完成，成績前 16 名的選手晉級決賽，並獲得由本中心提供的 12 小時晉級培訓課程。決賽於 11 月 26 日在本中心數碼匯點舉行，以澳門旅遊文化作主題，讓參賽者設計及製作旅遊登記表及記錄旅客資訊，最後生成行程卡供旅客儲存。</p>
+            <div class="history-awards">
+              <h4>獲獎名單</h4>
+              <ul>
+                <li><strong>冠軍</strong>黃浩源（澳門勞校中學）</li>
+                <li><strong>亞軍</strong>張鎮揚（澳門勞校中學）</li>
+                <li><strong>季軍</strong>羅友成（鏡平學校（中學部））</li>
+                <li><strong>優異獎</strong>尤啓樂（培正中學）、顏俊偉（培正中學）、岑嘉洛（澳門大學）</li>
+              </ul>
+              <p class="history-prize">獎金：冠軍 4,000 元、亞軍 3,000 元、季軍 2,000 元、優異獎 500 元。</p>
+            </div>
+          </article>
+
+          <article class="history-section" id="history-6" data-edition="6">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2023</span>
+              <h3>第六屆：創新</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>參賽規模</dt><dd>12 所學校、38 隊、76 位學生</dd></div>
+              <div><dt>初賽日期</dt><dd>2023年10月13日</dd></div>
+              <div><dt>決賽日期</dt><dd>2023年11月5日</dd></div>
+              <div><dt>決賽地點</dt><dd>本中心數碼匯點</dd></div>
+              <div><dt>決賽主題</dt><dd>餐飲：簡易自助點餐飲系統（點餐界面、點餐功能、統計價格）</dd></div>
+            </dl>
+            <p class="history-desc">第六屆賽事吸引 12 所學校、共 38 隊 76 位學生參賽。初賽已於 2023 年 10 月 13 日完成，成績前 10 隊的選手晉級決賽，並獲得由本中心提供的 12 小時晉級培訓課程。決賽於 2023 年 11 月 5 日在本中心數碼匯點舉行，以餐飲作主題，讓參賽隊伍設計及製作簡易的自助點餐飲系統，參賽隊伍需要在限時內完成點餐系統的界面設計、簡易的點餐功能以及統計價格功能。</p>
+            <div class="history-awards">
+              <h4>獲獎名單</h4>
+              <ul>
+                <li><strong>冠軍</strong>聖若瑟教區中學第五校（何義輝、林慧俊）</li>
+                <li><strong>亞軍</strong>聖保祿學校（盧銘翔、廖梓熙）</li>
+                <li><strong>季軍</strong>聖羅撒英文中學（林卓妍、容子詠）</li>
+                <li><strong>優異獎</strong>澳門工聯職業技術中學（周啓賢、劉家晞）、澳門勞校中學（許詩雅、李耀輝）</li>
+              </ul>
+              <p class="history-prize">獎金：冠軍 4,000 元、亞軍 3,000 元、季軍 2,000 元、優異獎 500 元。</p>
+            </div>
+          </article>
+
+          <article class="history-section" id="history-7" data-edition="7">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2024</span>
+              <h3>第七屆：傳承</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>合辦單位</dt><dd>澳門教育及青年發展局、澳門生產力暨科技轉移中心</dd></div>
+              <div><dt>比賽形式</dt><dd>隊制，每隊 2 人，須為同一學校，每校最多 5 隊</dd></div>
+              <div><dt>決賽名額</dt><dd>初賽前 10 隊晉級決賽（每校最多 2 隊）</dd></div>
+              <div><dt>初賽內容</dt><dd>HTML、CSS、JavaScript、WCAG、平面設計、網站設計、UI/UX</dd></div>
+            </dl>
+            <p class="history-desc">第七屆全澳中學生手機網站技術技能比賽由澳門教育及青年發展局與澳門生產力暨科技轉移中心合辦，以隊制形式參賽，每隊 2 人，2 人必須為同一學校，每間學校最多可派出 5 隊隊伍參加初賽。按初賽得分之順序，將有 10 隊隊伍晉身決賽，惟每間學校只限 2 隊隊伍進入決賽。初賽以機試形式作賽，內容涵蓋網站設計和開發的基礎知識，包括 HTML、CSS、JavaScript、WCAG、平面設計、網站設計、用戶介面設計、用戶體驗設計等。</p>
+            <div class="history-awards">
+              <h4>獲獎名單</h4>
+              <ul>
+                <li><strong>冠軍</strong>澳門工聯職業技術中學（許紹威、趙梓傑）</li>
+                <li><strong>亞軍</strong>聖若瑟教區中學第五校（柯彬淼、何俊銘）</li>
+                <li><strong>季軍</strong>粵華中學（彭灝軒、杜家星）</li>
+                <li><strong>優異獎</strong>澳門培正中學（李源浩、羅天逸；楊皓森、李倬霖）、聖公會（蔡高中學）等</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="history-section" id="history-8" data-edition="8">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2025</span>
+              <h3>第八屆：規模與傳承</h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>參賽規模</dt><dd>18 所學校、40 支隊伍、80 名中學生</dd></div>
+              <div><dt>決賽日期</dt><dd>2025年10月18日</dd></div>
+              <div><dt>頒獎禮</dt><dd>2025年11月15日 假 澳門科學館會議廳</dd></div>
+              <div><dt>比賽形式</dt><dd>隊制，每隊 2 人，須為同一學校，每校最多 5 隊</dd></div>
+            </dl>
+            <p class="history-desc">第八屆賽事已發展為隊制比賽，每隊 2 人，兩人必須為同一學校，每間學校最多可派出 5 隊參加初賽。2025 年總決賽於 10 月 18 日完成，共有 18 所學校、40 支隊伍、80 名中學生參與。賽事於 11 月 15 日假澳門科學館會議廳舉行聯合頒獎禮。</p>
+            <div class="history-awards">
+              <h4>獲獎名單</h4>
+              <ul>
+                <li><strong>冠軍</strong>澳門培正中學（李倬霖、羅天逸）</li>
+                <li><strong>亞軍</strong>聖若瑟教區中學第五校（英文部）（柯彬淼、湯浩希）</li>
+                <li><strong>季軍</strong>濠江中學（陳天澤、黃錦霖）</li>
+                <li><strong>卓越獎</strong>粵華中文中學（杜家星、鄭梓傑）；勞校中學（羅曉濤、張鎮南）</li>
+                <li><strong>優異獎</strong>勞校中學（羅兆荏、盧建諾）；澳門培正中學（楊皓森、張兆鋒）；聖保祿學校（朱相檳、陳昊昇）；澳門工聯職業技術中學（蔣昊臻、王子昂）</li>
+              </ul>
+              <p class="history-prize">獎金：冠軍 3,500 元、亞軍 2,500 元、季軍 1,500 元、卓越獎 500 元、優異獎 300 元。</p>
+            </div>
+          </article>
+
+          <article class="history-section history-section--now" id="history-9" data-edition="9">
+            <header class="history-section-head">
+              <span class="history-year" aria-hidden="true">2026</span>
+              <h3>第九屆：本屆 <em class="badge-now">本屆</em></h3>
+            </header>
+            <dl class="history-meta">
+              <div><dt>報名與初賽</dt><dd>2026年9月</dd></div>
+              <div><dt>決賽培訓與決賽</dt><dd>2026年10月</dd></div>
+              <div><dt>比賽形式</dt><dd>隊制</dd></div>
+              <div><dt>目標</dt><dd>發掘有潛質的青少年參加日後地區性及國際性比賽</dd></div>
+            </dl>
+            <p class="history-desc">2026 年第九屆賽事，延續「攜手同行三十載」精神。比賽安排於 9 月進行報名及初賽，10 月進行決賽培訓及決賽。本屆以隊制形式進行，鼓勵學生以手機網站技術回應未來挑戰，發掘有潛質的青少年參加日後地區性及國際性比賽。</p>
+          </article>
+
+        </div>
+
+        <p class="history-source">
+          官方連結：
+          <a class="text-link"
+             href="https://www.cpttm.org.mo/ist/it-competitions/mobile-web-competition/"
+             target="_blank" rel="noopener">
+            CPTTM 手機網站技術技能比賽 <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== 兩項比較面板（選做加分） ===== -->
+    <section id="comparePanel" class="compare-panel" hidden aria-labelledby="compare-title">
+      <div class="wrap compare-inner">
+        <h2 id="compare-title" class="sr-only">比賽比較</h2>
+        <div class="compare-slots" id="compareSlots"></div>
+        <div class="compare-actions">
+          <button type="button" class="text-btn" id="compareClearBtn">清除比較</button>
+          <button type="button" class="close-btn" id="compareCloseBtn">收起比較</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <p class="footer-title">澳門生產力暨科技轉移中心（CPTTM）</p>
+        <p class="footer-sub">2026 年第九屆全澳中學生手機網站技術技能比賽</p>
+      </div>
+      <nav class="footer-nav" aria-label="頁尾導覽">
+        <a href="index.html">首頁</a>
+        <a href="competitions.html">青年競賽數碼館</a>
+        <a href="index.html#about">關於中心</a>
+        <a href="index.html#skills">技能方向</a>
+        <a href="index.html#future">未來挑戰</a>
+      </nav>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" type="button" hidden aria-label="返回頁首">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 5 L12 19 M5 12 L12 5 L19 12"
+            stroke="currentColor" stroke-width="2.4"
+            fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- 無障礙：狀態播報 -->
+  <p id="a11yStatus" class="sr-only" role="status" aria-live="polite"></p>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
